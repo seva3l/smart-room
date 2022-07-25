@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="me-5 mt-4 d-flex flex-row-reverse mb-5">
+    <button type="button" class="btn btn-primary ms-3 ps-5 pe-5">
+        <a class="text-light" style="text-decoration: none;" href="/login">Login</a>
+    </button>
+</div>
+<h1 class="text-center text-light mb-5">Smart Room</h1>
+<div class="container">
+
+    <div class="d-flex justify-content-center align-items-center mb-2">
+        <div class="row mt-2">
+            <div class="col-sm-6">
+                <div class="card" style="width: 18rem; background-color: #334156;">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color:#8C939A">Electric Fan Status</h5>
+                        {% if electric_fan == "ON" %}
+                            <p class="card-text text-center fw-bold fs-1 text-info">ON</p>
+                        {% else %}
+                            <p class="card-text text-center fw-bold fs-1 text-white-50">OFF</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card" style="width: 18rem; background-color: #334156;">
+                <div class="card-body">
+                    <h5 class="card-title" style="color:#8C939A">Aircon Status</h5>
+                    {% if aircon == "ON" %}
+                        <p class="card-text text-center fw-bold fs-1 text-info">ON</p>
+                    {% else %}
+                        <p class="card-text text-center fw-bold fs-1 text-white-50">OFF</p>
+                    {% endif %}
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card" style="width: 18rem; background-color: #334156;">
+                    <div class="card-body">
+                    <h5 class="card-title" style="color:#8C939A">Indoor Temperature</h5>
+                    <p class="card-text text-center fw-bold fs-1 text-warning">{{ indoor_temperature }} °C</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card" style="width: 18rem; background-color: #334156;">
+                <div class="card-body">
+                    <h5 class="card-title" style="color:#8C939A">Outdoor Temperature</h5>
+                    <p class="card-text text-center fw-bold fs-1 text-warning">{{ outdoor_temperature }} °C</p>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="row mt-2">
+            <div class="col-sm-6">
+                <div class="card" style="width: 18rem; background-color: #334156;">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color:#8C939A">Indoor Humidity</h5>
+                        <p class="card-text text-center fw-bold fs-1 text-warning">{{ indoor_humidity }} %</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card" style="width: 18rem; background-color: #334156;">
+                <div class="card-body">
+                    <h5 class="card-title" style="color:#8C939A">Outdoor Humidity</h5>
+                    <p class="card-text text-center fw-bold fs-1 text-warning">{{ outdoor_humidity }} %</p>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="row mt-2">
+            <div class="col-sm-6">
+                <div class="card" style="width: 18rem; background-color: #334156;">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color:#8C939A">PM1</h5>
+                        <p class="card-text text-center fw-bold fs-1 text-warning">{{ pm1 }} µg/m³</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card" style="width: 18rem; background-color: #334156;">
+                <div class="card-body">
+                    <h5 class="card-title" style="color:#8C939A">PM2</h5>
+                    <p class="card-text text-center fw-bold fs-1 text-warning">{{ pm2 }} µg/m³</p>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="row mt-2">
+            <div class="col-sm-6">
+                <div class="card" style="width: 18rem; background-color: #334156;">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color:#8C939A">Carbon Dioxide</h5>
+                        <p class="card-text text-center fw-bold fs-1 text-warning">{{ carbon_dioxide }} PPM</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+{% endblock %}
