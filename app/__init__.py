@@ -21,7 +21,7 @@ scheduler.init_app(app)
 
 
 from app.route.routes import save_data
-scheduler.add_job(id='Scheduled Task',func=save_data,trigger='interval',minutes=1)
+scheduler.add_job(id='Scheduled Task',func=save_data,trigger='interval',minutes=30)
 
 from app.route import routes
 

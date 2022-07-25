@@ -153,13 +153,17 @@ def admin():
     file.close()
     temp = float(setting[0])
     form = TemperatureForm()
+    page = request.args.get('page', 1, type=int)
+    pagination = Sensor.query.order_by(Sensor.created_at.desc()).paginate(page, per_page=7)
+    next_url = url_for('admin', page=pagination.next_num) if pagination.has_next else None
+    prev_url = url_for('admin', page=pagination.prev_num) if pagination.has_prev else None
     if request.method == 'POST':
         
         with open('settings.txt', 'w') as f:
             f.write(str(form.temperature.data))
             f.close()
             temp = form.temperature.data
-    return render_template("admin.html", form = form,temp = temp)
+    return render_template("admin.html", form = form,temp = temp, pagination = pagination, next_url = next_url, prev_url = prev_url)
 
 @app.get('/tables')
 def view_table():
@@ -170,7 +174,7 @@ def view_table():
 
 @app.get('/download')
 def download():
-    datas = sensor.fetch_data()
+    datas = Sensor.query.all()
     output = io.BytesIO()
     workbook = xlwt.Workbook()
 
@@ -185,7 +189,6 @@ def download():
 
     idx = 0
     for data in datas:
-        print(data)
         sh.write(idx+1, 0 , str(data.id))
         sh.write(idx+1, 1 , str(data.name))
         sh.write(idx+1, 2 , str(data.description))
