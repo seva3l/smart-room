@@ -11,7 +11,7 @@
 <div class="me-5 mt-4 d-flex flex-row-reverse mb-5">
   
 </div>
-<div class="container">
+<div class="p-5">
 <h1 class="text-center text-light mb-5">Admin Dashboard</h1>
 
 <div class="d-flex justify-content-center align-items-center">
@@ -80,6 +80,125 @@
     {% endif %}
    
   </div>
+ 
 </div>
 </div>
+<div class="p-5">
+  <h1 class="text-light">Temperature Sensor Graph Data</h1>
+  <canvas id="lineChart_temp" width="900" height="400"></canvas>
+  <h1 class="text-light">Humidity Sensor Graph Data</h1>
+  <canvas id="lineChart_humi" width="900" height="400"></canvas>
+  <h1 class="text-light">Dust Sensor Graph Data</h1>
+  <canvas id="lineChart_dust" width="900" height="400"></canvas>
+  <h1 class="text-light">Carbon Dioxide Sensor Graph Data</h1>
+  <canvas id="lineChart_co2" width="900" height="400"></canvas>
+</div>
+<script>
+  // temperature 
+  const ctx_temp = document.getElementById('lineChart_temp').getContext('2d');
+  var lineChart_temp = new Chart(ctx_temp,{
+    type: "line",
+    data: {
+      labels: {{ temp_labels | safe}},
+      datasets: [
+        {
+          label: "Indoor Temperature",
+          data: {{ indoor_temp | safe }},
+          fill: false,
+          borderColor: "rgb(75,192,192)",
+          lineTension: 0.1
+        },
+        {
+          label: "Outdoor Temperature",
+          data: {{ outdoor_temp | safe }},
+          fill: false,
+          borderColor: "rgb(252, 3, 7)",
+          lineTension: 0.1
+        }
+      ]
+    },
+    options:{
+      responsive: true
+    }
+  })
+
+  // humidity 
+  const ctx_humi = document.getElementById('lineChart_humi').getContext('2d');
+  var lineChart_humi = new Chart(ctx_humi,{
+    type: "line",
+    data: {
+      labels: {{ humi_labels | safe}},
+      datasets: [
+        {
+          label: "Indoor Humidity",
+          data: {{ indoor_humi | safe }},
+          fill: false,
+          borderColor: "rgb(75,192,192)",
+          lineTension: 0.1
+        },
+        {
+          label: "Outdoor Humidity",
+          data: {{ outdoor_humi | safe }},
+          fill: false,
+          borderColor: "rgb(252, 3, 7)",
+          lineTension: 0.1
+        }
+      ]
+    },
+    options:{
+      responsive: true
+    }
+  })
+
+
+  // // dust 
+  const ctx_dust = document.getElementById('lineChart_dust').getContext('2d');
+  var lineChart_dust = new Chart(ctx_dust,{
+    type: "line",
+    data: {
+      labels: {{ humi_labels | safe}},
+      datasets: [
+        {
+          label: "PM1.0",
+          data: {{ pm1 | safe }},
+          fill: false,
+          borderColor: "rgb(75,192,192)",
+          lineTension: 0.1
+        },
+        {
+          label: "PM2.5",
+          data: {{ pm2 | safe }},
+          fill: false,
+          borderColor: "rgb(252, 3, 7)",
+          lineTension: 0.1
+        }
+      ]
+    },
+    options:{
+      responsive: true
+    }
+  })
+
+  // carbon dioxide 
+   // // dust 
+  const ctx_co2 = document.getElementById('lineChart_co2').getContext('2d');
+  var lineChart_dust = new Chart(ctx_co2,{
+    type: "line",
+    data: {
+      labels: {{ co2_labels | safe}},
+      datasets: [
+        {
+          label: "Carbon Dioxide",
+          data: {{ carbon_dioxide | safe }},
+          fill: false,
+          borderColor: "rgb(75,192,192)",
+          lineTension: 0.1
+        }
+      ]
+    },
+    options:{
+      responsive: true
+    }
+  })
+</script>
 {% endblock %}

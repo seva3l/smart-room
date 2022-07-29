@@ -3,7 +3,7 @@ import re
 from app import app
 from flask import render_template, request, Response, redirect, url_for
 from flask_wtf import FlaskForm
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from wtforms import StringField, PasswordField, FloatField
 from wtforms.validators import  DataRequired
 import io 
@@ -108,7 +108,6 @@ class TemperatureForm(FlaskForm):
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
-    sensor.create()
     data = {
         "indoor_temperature": str(indoor_temperature),
         "indoor_humidity": str(indoor_humidity),
@@ -126,6 +125,8 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('admin'))
     form = LoginForm()
     if form.validate_on_submit():
         if request.method == "POST":
@@ -148,6 +149,31 @@ def logout():
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
+    indoor_temp_data = Sensor.query.filter(Sensor.name == 'Indoor Temperature Sensor')
+    outdoor_temp_data = Sensor.query.filter(Sensor.name == 'Outdoor Temperature Sensor')
+    indoor_humi_data = Sensor.query.filter(Sensor.name == 'Indoor Humidity Sensor')
+    outdoor_humi_data = Sensor.query.filter(Sensor.name == 'Outdoor Humidity Sensor')
+    pm1_data = Sensor.query.filter(Sensor.name == 'PM1 Dust Sensor')
+    pm2_data = Sensor.query.filter(Sensor.name == 'PM2.5 Dust Sensor')
+    carbon_data = Sensor.query.filter(Sensor.name == 'Carbon Dioxide Sensor')
+
+    # temperature 
+    temperature_label = [row.created_at.strftime("%m/%d/%Y, %H:%M:%S") for row in indoor_temp_data]
+    indoor_temp_value = [row.value for row in indoor_temp_data]
+    outdoor_temp_value = [row.value for row in outdoor_temp_data]
+    # humidity
+    humidity_label = [row.created_at.strftime("%m/%d/%Y, %H:%M:%S") for row in indoor_humi_data]
+    indoor_humi_value = [row.value for row in indoor_humi_data]
+    outdoor_humi_value = [row.value for row in outdoor_humi_data]
+    #dust
+    dust_label = [row.created_at.strftime("%m/%d/%Y, %H:%M:%S") for row in pm1_data]
+    pm1_value = [row.value for row in pm1_data]
+    pm2_value = [row.value for row in pm2_data]
+    
+    # co2 
+    co2_label = [row.created_at.strftime("%m/%d/%Y, %H:%M:%S") for row in carbon_data]
+    carbon_value = [row.value for row in carbon_data]
+   
     file = open("settings.txt", "r")
     setting = file.readlines()
     file.close()
@@ -163,7 +189,26 @@ def admin():
             f.write(str(form.temperature.data))
             f.close()
             temp = form.temperature.data
-    return render_template("admin.html", form = form,temp = temp, pagination = pagination, next_url = next_url, prev_url = prev_url)
+
+    template_data = {
+        "form": form,
+        "temp": temp,
+        "pagination": pagination,
+        "next_url": next_url,
+        "prev_url": prev_url,
+        "temp_labels": temperature_label,
+        "indoor_temp": indoor_temp_value,
+        "outdoor_temp": outdoor_temp_value,
+        "humi_labels": humidity_label,
+        "indoor_humi": indoor_humi_value,
+        "outdoor_humi": outdoor_humi_value,
+        "dust_labels": dust_label,
+        "pm1": pm1_value,
+        "pm2": pm2_value,
+        "co2_labels": co2_label,
+        "carbon_dioxide": carbon_value   
+    }
+    return render_template("admin.html", **template_data)
 
 @app.get('/tables')
 def view_table():
@@ -199,4 +244,4 @@ def download():
     workbook.save(output)
     output.seek(0)
 
-    return Response(output, mimetype="application/ms-excel", headers={"Content-Disposition":"attachment;filename=sensors_data_report.xlsx"})
+    return Response(output, mimetype="application/ms-excel", headers={"Content-Disposition":"attachment;filename=sensors_data_report.xls"})
