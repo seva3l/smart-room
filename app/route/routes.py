@@ -62,8 +62,8 @@ def get_values_from_serial():
     print("Reading data from arduino>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     file = open("settings.txt", "r")
     setting = file.readlines()
-    file.close()
-    temp = float(setting[0])
+    file.close()    
+    temp = '24' if setting[0] == 'None' else str(setting[0])
     global indoor_temperature
     global indoor_humidity
     global outdoor_temperature
@@ -177,7 +177,7 @@ def admin():
     file = open("settings.txt", "r")
     setting = file.readlines()
     file.close()
-    temp = float(setting[0])
+    temp = 24 if setting[0] == 'None' else float(setting[0])
     form = TemperatureForm()
     page = request.args.get('page', 1, type=int)
     pagination = Sensor.query.order_by(Sensor.created_at.desc()).paginate(page, per_page=7)
